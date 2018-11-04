@@ -3,7 +3,7 @@
 import socket 
 import select 
 import sys 
-from thread import *
+from _thread import *
   
 """The first argument AF_INET is the address domain of the 
 socket. This is used when we have an Internet Domain with 
@@ -15,8 +15,8 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
   
 # checks whether sufficient arguments have been provided 
 if len(sys.argv) != 3: 
-    print "Correct usage: script, IP address, port number"
-    exit() 
+	print("Correct usage: script, IP address, port number")
+	exit() 
   
 # takes the first argument from command prompt as IP address 
 IP_address = str(sys.argv[1]) 
@@ -41,70 +41,68 @@ list_of_clients = []
   
 def clientthread(conn, addr): 
   
-    # sends a message to the client whose user object is conn 
-    conn.send("Welcome to this chatroom!") 
+	# sends a message to the client whose user object is conn 
+	conn.send(bytes("Welcome to this chatroom!",'utf8')) 
+	
+	while True: 
+			try: 
+				message = conn.recv(2048) 
+				if message: 
+					msg='<'+str(addr[0])+'>'+message.decode()
+					print(msg)
+					"""prints the message and address of the 
+					user who just sent the message on the server 
+					terminal"""
   
-    while True: 
-            try: 
-                message = conn.recv(2048) 
-                if message: 
+					# Calls broadcast function to send message to all  
+					broadcast(msg, conn) 
   
-                    """prints the message and address of the 
-                    user who just sent the message on the server 
-                    terminal"""
-                    print "<" + addr[0] + "> " + message 
+				else: 
+					"""message may have no content if the connection 
+					is broken, in this case we remove the connection"""
+					remove(conn) 
   
-                    # Calls broadcast function to send message to all 
-                    message_to_send = "<" + addr[0] + "> " + message 
-                    broadcast(message_to_send, conn) 
-  
-                else: 
-                    """message may have no content if the connection 
-                    is broken, in this case we remove the connection"""
-                    remove(conn) 
-  
-            except: 
-                continue
+			except: 
+				continue
   
 """Using the below function, we broadcast the message to all 
 clients who's object is not the same as the one sending 
 the message """
 def broadcast(message, connection): 
-    for clients in list_of_clients: 
-        if clients!=connection: 
-            try: 
-                clients.send(message) 
-            except: 
-                clients.close() 
+	for clients in list_of_clients: 
+		if clients!=connection: 
+			try: 
+				clients.send(bytes(message,'utf8') )
+			except: 
+				clients.close() 
   
-                # if the link is broken, we remove the client 
-                remove(clients) 
+				# if the link is broken, we remove the client 
+				remove(clients) 
   
 """The following function simply removes the object 
 from the list that was created at the beginning of  
 the program"""
 def remove(connection): 
-    if connection in list_of_clients: 
-        list_of_clients.remove(connection) 
+	if connection in list_of_clients: 
+		list_of_clients.remove(connection) 
   
 while True: 
   
-    """Accepts a connection request and stores two parameters,  
-    conn which is a socket object for that user, and addr  
-    which contains the IP address of the client that just  
-    connected"""
-    conn, addr = server.accept() 
+	"""Accepts a connection request and stores two parameters,  
+	conn which is a socket object for that user, and addr  
+	which contains the IP address of the client that just  
+	connected"""
+	conn, addr = server.accept() 
   
-    """Maintains a list of clients for ease of broadcasting 
-    a message to all available people in the chatroom"""
-    list_of_clients.append(conn) 
+	"""Maintains a list of clients for ease of broadcasting 
+	a message to all available people in the chatroom"""
+	list_of_clients.append(conn) 
+	# prints the address of the user that just connected 
+	print(addr[0] + " connected")
   
-    # prints the address of the user that just connected 
-    print addr[0] + " connected"
-  
-    # creates and individual thread for every user  
-    # that connects 
-    start_new_thread(clientthread,(conn,addr))     
+	# creates and individual thread for every user  
+	# that connects 
+	start_new_thread(clientthread,(conn,addr))     
   
 conn.close() 
 server.close()
