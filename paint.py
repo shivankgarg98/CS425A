@@ -40,7 +40,7 @@ w.pack(expand = YES, fill = BOTH)
 w.bind( "<B1-Motion>", paint )
 w.bind( "<Button-1> ", naya)
 
-message = Label( master, text = "Press and Drag the mouse to draw" )
+message = Label( master, text = "You know what to do now. :-P" )
 message.pack( side = BOTTOM )
 while 1:
    for socks in read_sockets: 
