@@ -2,6 +2,7 @@ from tkinter import *
 import socket 
 import select 
 import sys 
+import json
   
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 if len(sys.argv) != 3: 
@@ -28,7 +29,7 @@ def paint( event ):
    global xp 
    global yp
    x, y = ( event.x  ), ( event.y  )
-   print(x,y)
+   #print(x,y)
    w.create_line( xp, yp, x, y ,width=5)
    message=str(xp)+'|'+str(yp)+'|'+str(x)+'|'+str(y)
    server.send(bytes(message,'utf8'))
