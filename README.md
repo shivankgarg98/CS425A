@@ -13,3 +13,4 @@
 4. Implement Voice chat while drawing
 5. Implement user identifier (Add a name above cursor of people drawing in my canvas).
 6. Implement Log-in/signup and databases stuffs.
+7. Ajustment with screen resizement?
