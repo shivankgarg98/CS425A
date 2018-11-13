@@ -9,7 +9,8 @@ from tkinter.colorchooser import *
 color=(1,'red')
 def getColor():
     global color
-    color = askcolor()
+    color = askcolor() #choose your color
+    button1.configure(bg = color[1]) #dynamic update the color you ask
 def eraser():
     global color
     color = (2,'#d9d9d9')
@@ -17,7 +18,7 @@ def eraser():
 def naya(event):
 	global xp 
 	global yp
-	xp, yp = ( event.x  ), ( event.y  )
+	xp, yp = ( event.x ), ( event.y )
 def paint(event):
    global xp 
    global yp
@@ -53,15 +54,15 @@ w.pack(expand = YES, fill = BOTH)
 w.bind( "<B1-Motion>", paint )
 w.bind( "<Button-1> ", naya)
 
-button1 = Button(text = "Color", command = getColor, anchor = W)
-button1.configure(width = 10, activebackground = "#33B5E5", relief = RAISED,bg=color[1])
+button1 = Button(text = "PEN COLOR", command = getColor, anchor = W)
+button1.configure(width = 10, activebackground = "#33B5E5", relief = RAISED, bg = color[1])
 button1_window = w.create_window(10, 10, anchor=NW, window=button1)
 
 scale = Scale(master, from_=1, to=15, orient=HORIZONTAL)
 scale.pack()
-eraser = Button(text = 'eraser', command = eraser, anchor = W)
-eraser.configure(width = 10, activebackground = "#33B5E5", relief = RAISED, bg='#653656')
-eraser_window = w.create_window(10,60, anchor=NW, window=eraser)
+eraser = Button(text = 'ERASER', command = eraser, anchor = W)
+eraser.configure(width = 10, activebackground = "#33B5E5", relief = RAISED, bg='snow')
+eraser_window = w.create_window(10,50, anchor=NW, window=eraser)
 
 
 message = Label( master, text = "You know what to do now" )
