@@ -11,10 +11,12 @@ def getColor():
     global color
     color = askcolor() #choose your color
     button1.configure(bg = color[1]) #dynamic update the color you ask
+    w.configure(cursor="crosshair") #change the canvas cursor to crosshair for painting"
 
 def eraser():
     global color
     color = (2,'#d9d9d9')
+    w.configure(cursor="pirate") #change cursor to indicate deletion
 
 def naya(event):
 	global xp 
@@ -52,6 +54,7 @@ yp=0
 master = Tk()
 w = Canvas(master, width=canvas_width, height=canvas_height)
 w.pack(expand = YES, fill = BOTH)
+w.configure(cursor="crosshair")
 w.bind( "<B1-Motion>", paint )
 w.bind( "<Button-1> ", naya)
 
