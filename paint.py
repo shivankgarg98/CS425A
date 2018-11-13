@@ -11,6 +11,7 @@ def getColor():
     global color
     color = askcolor() #choose your color
     button1.configure(bg = color[1]) #dynamic update the color you ask
+
 def eraser():
     global color
     color = (2,'#d9d9d9')
@@ -19,11 +20,11 @@ def naya(event):
 	global xp 
 	global yp
 	xp, yp = ( event.x ), ( event.y )
+
 def paint(event):
    global xp 
    global yp
    x, y = ( event.x  ), ( event.y  )
-   #print(x,y)
    w.create_line( xp, yp, x, y ,width=float(scale.get()), fill=color[1])
    message=str(xp)+'|'+str(yp)+'|'+str(x)+'|'+str(y)
    server.send(bytes(message,'utf8'))
