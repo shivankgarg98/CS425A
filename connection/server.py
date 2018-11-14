@@ -4,6 +4,7 @@ import socket
 import select 
 import sys 
 from _thread import *
+import json
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
@@ -20,15 +21,16 @@ server.listen(100)
 list_of_clients = [] 
 
 def clientthread(conn, addr):  
-    conn.send(bytes("Welcome to this chatroom!",'utf8')) 
+    conn.send(bytes(json.dumps("Welcome to this chatroom!"),'utf8')) 
     while True: 
         try: 
             message = conn.recv(2048) 
             if message: 
-                msg='<'+str(addr[0])+'>'+message.decode()
+                msg=message.decode()
                 print(msg)
-                broadcast(msg, conn) 
-
+                msg=json.loads(msg)
+                msg=msg['cords']
+                broadcast(json.dumps({"addr":addr[0],"cords":msg}), conn) 
             else: 
                 remove(conn) 
 

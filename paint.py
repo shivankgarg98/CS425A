@@ -1,5 +1,5 @@
 from tkinter import *
-
+import numpy as np
 import socket 
 import select 
 import sys 
@@ -22,10 +22,8 @@ def naya(event):
     global xp 
     global yp
     global wid
-    global hi
     xp, yp = ( event.x ), ( event.y )
-    wid=w.winfo_width()
-    hi=w.winfo_height()
+    wid=min(w.winfo_width(),w.winfo_height())
 
 def paint(event):
     global xp 
@@ -34,8 +32,8 @@ def paint(event):
     global hi
     x, y = ( event.x  ), ( event.y  )
     w.create_line( xp, yp, x, y ,width=float(scale.get()), fill=color[1])
-    message=str(xp)+'|'+str(yp)+'|'+str(x)+'|'+str(y)+'|'+str(hi)+'|'+str(wid)
-    server.send(bytes(message,'utf8'))
+    mes=[xp,yp,x,y,wid]
+    server.send(bytes(json.dumps({"cords":mes}),'utf8'))
     xp, yp = ( event.x  ), ( event.y  )
 
 #Button(text='Select Color', command=getColor).pack()
@@ -56,15 +54,13 @@ canvas_width = 500
 canvas_height = 150
 xp=0
 yp=0
-wid=canvas_width
-hi=canvas_height
-
 master = Tk()
 w = Canvas(master, width=canvas_width, height=canvas_height)
 w.pack(expand = YES, fill = BOTH)
 w.configure(cursor="crosshair")
 w.bind( "<B1-Motion>", paint )
 w.bind( "<Button-1> ", naya)
+wid=min(w.winfo_width(),w.winfo_height())
 
 button1 = Button(text = "PEN COLOR", command = getColor, anchor = W)
 button1.configure(width = 10, activebackground = "#33B5E5", relief = RAISED, bg = color[1])
@@ -85,15 +81,15 @@ while 1:
             try: 
                 mes = socks.recv(2048)
                 mes=mes.decode()
-                cords=[]
-                if(mes[0]=='<'):
-                    mes=mes.split('>')[1]
-                    mes=mes.split('|')
-                    for i in mes:
-                       cords.append(int(i))
-                print(cords)
+                if(mes[1]=='W'):
+                    continue
+                else:
+                    mes=json.loads(mes)
+                    print(mes)
+                cords=[]    
+                cords=mes['cords']
                 if(len(cords)):
-                    w.create_line( cords[0]*wid/cords[4], cords[1]*hi/cords[5], cords[2]*wid/cords[4], cords[3]*hi/cords[5] ,width=float(scale.get()), fill=color[1])
+                    w.create_line( cords[0]*wid/cords[4], cords[1]*wid/cords[4], cords[2]*wid/cords[4], cords[3]*wid/cords[4] ,width=float(scale.get()), fill=color[1])
             except socket.timeout:
                 '''  print('')'''    
     master.update_idletasks()
