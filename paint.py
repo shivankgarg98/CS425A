@@ -16,7 +16,7 @@ def getColor():
 def eraser():
     global color
     color = (2,'#d9d9d9')
-    w.configure(cursor="pirate") #change cursor to indicate deletion
+    w.configure(cursor="spraycan") #change cursor to indicate deletion
 
 def naya(event):
     global xp 
