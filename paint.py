@@ -52,7 +52,7 @@ server.connect((IP_address, Port))
 sockets_list = [sys.stdin, server] 
 
 read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
-server.settimeout(0.01)
+server.settimeout(0.001)
 canvas_width = 500
 canvas_height = 150
 xp=0
