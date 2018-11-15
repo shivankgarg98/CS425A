@@ -20,7 +20,7 @@ server.connect((IP_address, Port))
 sockets_list = [sys.stdin, server] 
 
 read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
-server.settimeout(0.001)
+server.settimeout(0.035)
 
 p=pyaudio.PyAudio()
 recv_stream=p.open(format=FORMAT,channels=CHANNELS,rate=RATE,output=True,frames_per_buffer=CHUNK)
