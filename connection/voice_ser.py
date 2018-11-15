@@ -2,6 +2,7 @@ import socket
 import select
 import sys
 from _thread import *
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
 
@@ -17,11 +18,6 @@ server.listen(100)
 list_of_clients = []
 
 def clientthread(conn, addr):  
-    #  mes= {'type':'message',
-            #  'message':'Welcome',
-            #  'data':'',
-            #  'addr':''}
-    #  #  conn.send(bytes(json.dumps(mes),'utf8')) 
     while True: 
         try: 
             message = conn.recv(2048) 

@@ -17,6 +17,10 @@ if len(sys.argv) != 3:
 IP_address = str(sys.argv[1]) 
 Port = int(sys.argv[2]) 
 server.connect((IP_address, Port)) 
+sockets_list = [sys.stdin, server] 
+
+read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
+server.settimeout(0.001)
 
 p=pyaudio.PyAudio()
 recv_stream=p.open(format=FORMAT,channels=CHANNELS,rate=RATE,output=True,frames_per_buffer=CHUNK)
@@ -24,18 +28,20 @@ send_stream=p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input=True,frames_p
 
 def recv_data():
     while True:
-        try:
-            data = s.recv(1024)
-            receive_stream.write(data)
-        except:
-            pass
-
+        for socks in read_sockets:
+            if socks==server:
+                data=socks.recv(1024)
+                if data:
+                    print(len(data))
+                recv_stream.write(data)
+            else:
+                pass
 
 def send_data():
     while True:
         try:
             data = send_stream.read(CHUNK)
-            s.sendall(data)
+            server.send(data)
         except:
             pass
 
