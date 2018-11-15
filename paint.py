@@ -78,22 +78,24 @@ eraser_window = w.create_window(10,50, anchor=NW, window=eraser)
 
 message = Label( master, text = "You know what to do now" )
 message.pack( side = BOTTOM )
+dummy = {'pen_params': [[1, '#d9d9d9'], 1.0], 'coordinates': [64, 524, 65, 526, 382]}
+server.send(bytes(json.dumps(dummy),'utf8'))
 while 1:
     for socks in read_sockets: 
         if socks == server:
             try: 
                 mes = socks.recv(2048)
                 mes=mes.decode()
-                print(mes)
-                if(mes[1]=='W'):
+                mes=json.loads(mes)
+                if(mes['type']=='message'):
                     continue
-                else:
-                    mes=json.loads(mes)
-                    print(mes)  
+                # else:
+                #     mes=json.loads(mes)
+                    #print(mes)  
+                print(mes)
                 cords = mes['data']['coordinates']
                 pen_params = mes['data']['pen_params']
-                if(len(cords)):
-                    w.create_line( cords[0]*wid/cords[4], cords[1]*wid/cords[4], cords[2]*wid/cords[4], cords[3]*wid/cords[4] ,width=pen_params[1], fill=pen_params[0][1])
+                w.create_line( cords[0]*wid/cords[4], cords[1]*wid/cords[4], cords[2]*wid/cords[4], cords[3]*wid/cords[4] ,width=pen_params[1], fill=pen_params[0][1])
             except socket.timeout:
                 '''  print('')'''    
     master.update_idletasks()

@@ -21,7 +21,11 @@ server.listen(100)
 list_of_clients = [] 
 
 def clientthread(conn, addr):  
-    conn.send(bytes(json.dumps("Welcome to this chatroom!"),'utf8')) 
+    mes= {'type':'message',
+            'message':'Welcome',
+            'data':'',
+            'addr':''}
+    conn.send(bytes(json.dumps(mes),'utf8')) 
     while True: 
         try: 
             message = conn.recv(2048) 
@@ -29,7 +33,7 @@ def clientthread(conn, addr):
                 msg=message.decode()
                 print(msg)
                 msg=json.loads(msg)
-                broadcast(json.dumps({"addr":addr[0],"data":msg}), conn) 
+                broadcast(json.dumps({"type":"draw", "addr":addr[0],"data":msg}), conn) 
             else: 
                 remove(conn) 
 
