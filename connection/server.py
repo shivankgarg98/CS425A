@@ -25,7 +25,7 @@ def clientthread(conn, addr):
             'message':'Welcome',
             'data':'',
             'addr':''}
-    conn.send(bytes(json.dumps(mes),'utf8')) 
+    conn.send(bytes('|'+json.dumps(mes),'utf8')) 
     while True: 
         try: 
             message = conn.recv(2048) 
@@ -33,7 +33,9 @@ def clientthread(conn, addr):
                 msg=message.decode()
                 print(msg)
                 msg=json.loads(msg)
-                broadcast(json.dumps({"type":"draw", "addr":addr[0],"data":msg}), conn) 
+                mes=json.dumps({"type":"draw", "addr":addr[0],"data":msg})
+                mes='|'+mes
+                broadcast(mes, conn) 
             else: 
                 remove(conn) 
 
