@@ -32,8 +32,11 @@ def paint(event):
     global hi
     x, y = ( event.x  ), ( event.y  )
     w.create_line( xp, yp, x, y ,width=float(scale.get()), fill=color[1])
-    mes=[xp,yp,x,y,wid]
-    server.send(bytes(json.dumps({"cords":mes}),'utf8'))
+    coord=[xp,yp,x,y,wid]
+    pen_width = float(scale.get())
+    pen = [color,pen_width]
+    data = {"coordinates":coord,"pen_params":pen}
+    server.send(bytes(json.dumps(data),'utf8'))
     xp, yp = ( event.x  ), ( event.y  )
 
 #Button(text='Select Color', command=getColor).pack()
@@ -81,15 +84,16 @@ while 1:
             try: 
                 mes = socks.recv(2048)
                 mes=mes.decode()
+                print(mes)
                 if(mes[1]=='W'):
                     continue
                 else:
                     mes=json.loads(mes)
-                    print(mes)
-                cords=[]    
-                cords=mes['cords']
+                    print(mes)  
+                cords = mes['data']['coordinates']
+                pen_params = mes['data']['pen_params']
                 if(len(cords)):
-                    w.create_line( cords[0]*wid/cords[4], cords[1]*wid/cords[4], cords[2]*wid/cords[4], cords[3]*wid/cords[4] ,width=float(scale.get()), fill=color[1])
+                    w.create_line( cords[0]*wid/cords[4], cords[1]*wid/cords[4], cords[2]*wid/cords[4], cords[3]*wid/cords[4] ,width=pen_params[1], fill=pen_params[0][1])
             except socket.timeout:
                 '''  print('')'''    
     master.update_idletasks()

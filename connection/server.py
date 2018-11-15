@@ -29,8 +29,7 @@ def clientthread(conn, addr):
                 msg=message.decode()
                 print(msg)
                 msg=json.loads(msg)
-                msg=msg['cords']
-                broadcast(json.dumps({"addr":addr[0],"cords":msg}), conn) 
+                broadcast(json.dumps({"addr":addr[0],"data":msg}), conn) 
             else: 
                 remove(conn) 
 
