@@ -28,14 +28,15 @@ send_stream=p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input=True,frames_p
 
 def recv_data():
     while True:
-        for socks in read_sockets:
-            if socks==server:
-                data=socks.recv(1024)
-                if data:
-                    print(len(data))
-                recv_stream.write(data)
-            else:
-                pass
+        try:
+            for socks in read_sockets:
+                if socks==server:
+                    data=socks.recv(1024)
+                    recv_stream.write(data)
+                else:
+                    pass
+        except:
+            continue
 
 def send_data():
     while True:

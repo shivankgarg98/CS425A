@@ -52,7 +52,7 @@ server.connect((IP_address, Port))
 sockets_list = [sys.stdin, server] 
 
 read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
-server.settimeout(0.001)
+server.settimeout(0.01)
 canvas_width = 500
 canvas_height = 150
 xp=0
@@ -84,7 +84,7 @@ while 1:
     for socks in read_sockets: 
         if socks == server:
             try: 
-                mes = socks.recv(2048)
+                mes = socks.recv(4096)
                 mes=mes.decode()
                 mes=json.loads(mes)
                 if(mes['type']=='message'):
